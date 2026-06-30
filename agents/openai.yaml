@@ -1,0 +1,4 @@
+interface:
+  display_name: "Owner Handoff Development"
+  short_description: "Bootstrap safe-copy development with Owner review"
+  default_prompt: "Use $owner-handoff-development to bootstrap the environment, confirm formal and safety paths, then run delegated development with Owner review, tests, and GitHub integration."
