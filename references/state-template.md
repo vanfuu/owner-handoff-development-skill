@@ -163,8 +163,12 @@ Read:
 
 - Config source: `<path or none>`
 - Default drive confirmed by user: `<drive>`
+- Dev tools root confirmed by user: `<dev_tools_root>`
 - Owner handoff root confirmed by user: `<owner_handoff_root>`
 - Tool status: `<summary>`
+- Install plan: `<none or summary>`
+- System/default-location writes: `<none or documented unavoidable writes>`
+- Cache/global directory redirects: `<none or summary>`
 - Setup actions: `<none or commands>`
 - Remaining manual setup: `<none or list>`
 

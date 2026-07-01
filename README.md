@@ -78,6 +78,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environmen
 
 Use `-InstallMissing` only after the user has authorized automatic setup of non-secret developer tools.
 
+The skill requires explicit confirmation before installing tools or writing project folders. Reusable external developer tools should target a user-confirmed tools directory outside system/default locations; project-specific tools should stay inside the project. Formal repository, safety copy, handoff, and report paths must be confirmed before filesystem changes.
+
 ## License
 
 MIT. This license is intentionally permissive for a workflow/tooling skill: people can use it, modify it, fork it, and adopt it in commercial or private projects while preserving the copyright notice and disclaimer.
@@ -164,7 +166,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environmen
 
 只有在使用者明确授权自动安装非敏感开发工具后，才使用 `-InstallMissing`。
 
+安装工具或写入项目目录之前必须先得到明确确认。可复用的外部开发工具应安装到使用者确认过的工具目录，避免默认系统目录；项目专用工具应放在项目内部。正式仓库、安全副本、交接区和报告目录都必须确认后再继续。
+
 ## 许可证
 
 MIT。这个许可证对流程类和工具类 Skill 很友好：别人可以自由使用、修改、fork，并用于商业或私有项目，同时保留版权声明和免责声明。
-

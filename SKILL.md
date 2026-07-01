@@ -17,11 +17,39 @@ On an unfamiliar computer, bootstrap before creating tasks or editing code:
 
 1. Read any existing project config or bridge state. Prefer, in order: a user-provided config path, `<cwd>/owner-handoff.config.json`, `<cwd>/.owner-handoff/config.json`, then the user's home-level config.
 2. Detect OS, shell, Git, GitHub CLI, Python, ripgrep, and other project-required tools. Use `scripts/inspect_environment.ps1` on Windows/PowerShell when available.
-3. If required tools are missing and the user has authorized setup automation, install them with the platform package manager. On Windows prefer `winget`; otherwise use the native package manager when safe.
-4. Ask the user to confirm the default drive and the resolved formal/safety directories before creating, cloning, deleting, copying, or writing project files.
-5. Only after path confirmation, create missing folders, clone/copy repositories, create the bridge protocol, and continue with the Owner workflow.
+3. If required tools are missing, classify each install before acting: system-required tool, general development tool, project-specific tool, or temporary tool.
+4. Do not install external development tools into system/default locations by default. Ask the user to confirm a reusable `dev_tools_root`; put project-only tools inside the project; and list unavoidable system, home-directory, registry, or package-manager writes before proceeding.
+5. Generate an install plan with purpose, target directory, scope, expected system/default-location writes, cache/global-directory settings, and whether user confirmation is required. Do not install until the user confirms the plan.
+6. Ask the user to confirm the default drive and the resolved formal/safety directories before creating, cloning, deleting, copying, or writing project files.
+7. Only after path and install-plan confirmation, create missing folders, clone/copy repositories, create the bridge protocol, and continue with the Owner workflow.
 
-Do not guess the drive silently. If no project config has an explicit drive, ask the user to confirm the default drive first.
+Do not guess drives, volumes, project roots, or handoff paths silently. If no project config has explicit paths, ask the user to confirm them before creating, copying, cloning, deleting, or writing.
+
+## Required Confirmation Gates
+
+Before installing, configuring, initializing, cloning, copying, or writing project files, ask for confirmation when the value is not already explicitly approved in project config or the current user request.
+
+Confirm these paths first:
+
+- reusable development tools root, such as `dev_tools_root`
+- formal repository path
+- owner handoff root
+- safety copy path
+- handoff root
+- report/output paths when the workflow will write reports
+
+For every install, present a plan before acting:
+
+- package/tool name
+- purpose
+- install scope: system-required, reusable development tool, project-specific, or temporary
+- target directory
+- system/default-location writes and whether they are avoidable
+- cache/global-directory redirects
+- exact command to run
+- whether user confirmation has already been received
+
+If confirmation is missing, stop and ask. Do not treat inferred defaults as approval.
 
 ## Core Roles
 
@@ -54,7 +82,7 @@ If a project already has a bridge protocol, read it before acting. Otherwise cre
 
 ## Workflow
 
-1. **Bootstrap environment**: read config, detect tools, install missing non-secret tooling when authorized, and confirm formal/safety paths. Use `references/environment-bootstrap.md`.
+1. **Bootstrap environment**: read config, detect tools, generate any required install plan, confirm reusable tool directories and formal/safety paths, then act only after user confirmation. Use `references/environment-bootstrap.md`.
 2. **Rebuild context**: read the bridge protocol, current state, README, roadmap/spec files, and repo status for both formal repo and safe copy.
 3. **Decide the next task**: choose the smallest coherent unit that advances the project without leaving architecture debt.
 4. **Write the task file**: include background, goal, allowed scope, forbidden scope, acceptance criteria, required tests, delivery directory, and rework triggers. Use `references/task-template.md`.
