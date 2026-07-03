@@ -230,6 +230,52 @@ Risks / Notes:
 - <risk>
 ```
 
+### Interruption / Resume Checkpoint
+
+Use this section only when work stops before completion because of quota exhaustion, time-window limits, rate limits, tool failure, session cutoff, or another external interruption.
+
+Status:
+
+```text
+not_interrupted | interrupted | blocked
+```
+
+Reason:
+
+```text
+<quota exhausted | rate limit | tool failure | session cutoff | other>
+```
+
+Last known repository state:
+
+```text
+<branch, commit, git status summary>
+```
+
+Completed before interruption:
+
+```text
+- <completed item>
+```
+
+Not yet completed:
+
+```text
+- <remaining item>
+```
+
+Verification status:
+
+```text
+<commands run and commands still required>
+```
+
+Resume instruction:
+
+```text
+When the user returns, read this checkpoint first and continue with: <next concrete action>
+```
+
 ## Historical Snapshots
 
 Move older snapshots below this line. The top snapshot is authoritative.

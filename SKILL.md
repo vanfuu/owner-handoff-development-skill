@@ -51,6 +51,25 @@ For every install, present a plan before acting:
 
 If confirmation is missing, stop and ask. Do not treat inferred defaults as approval.
 
+## Interruption And Resume Policy
+
+If work is interrupted by quota exhaustion, time-window limits, rate limits, model/session cutoff, tool failure, or any similar external stop, do not claim the task is complete unless the requested outcome was actually finished and freshly verified.
+
+Before stopping, record a checkpoint in the project state file or handoff notes:
+
+- current task ID and objective
+- current repository, branch, and `git status`
+- files changed or suspected changed
+- commands already run and their results
+- validation not yet run or not yet trusted
+- unresolved work
+- exact next action to resume
+- any user confirmation still required
+
+Tell the user the true status plainly: completed, partially completed, blocked, or interrupted. If interrupted, state that the next conversation can continue from the recorded checkpoint after quota/session availability returns.
+
+When the user returns, first read the checkpoint/current state, report the resumable task and next action, then continue from that point. Never use an interruption as a reason to mark work complete, skip tests, omit docs, or hide uncertainty.
+
 ## Core Roles
 
 - **User**: states goals, principles, priorities, product ideas, and final product decisions.

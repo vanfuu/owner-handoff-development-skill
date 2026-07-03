@@ -21,6 +21,7 @@ This skill is useful when you want Codex to act as the final engineering owner w
 - Owner review and formal integration checklist.
 - Bridge protocol and current-state templates.
 - PowerShell environment inspection script.
+- Interruption and resume policy for quota, rate-limit, or session cutoffs.
 
 ## Default Layout
 
@@ -109,6 +110,7 @@ MIT. This license is intentionally permissive for a workflow/tooling skill: peop
 - Owner 审查与正式集成清单。
 - 记忆桥协议与当前状态模板。
 - PowerShell 环境检查脚本。
+- 针对额度、限流或会话中断的断点记录与恢复规则。
 
 ## 默认目录结构
 
