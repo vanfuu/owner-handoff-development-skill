@@ -19,6 +19,7 @@ This skill is useful when you want Codex to act as the final engineering owner w
 - Copyable implementer instructions.
 - Delivery packet requirements: `summary.md`, `changed-files.txt`, `verification.md`, and `patch.diff`.
 - Owner review and formal integration checklist.
+- GitHub repository delivery policy with local commit, remote push, draft PR, merge, and tag cadence.
 - Bridge protocol and current-state templates.
 - PowerShell environment inspection script.
 - Interruption and resume policy for quota, rate-limit, or session cutoffs.
@@ -108,6 +109,7 @@ MIT. This license is intentionally permissive for a workflow/tooling skill: peop
 - 可直接复制给实现 Agent 的任务指令。
 - 交付包要求：`summary.md`、`changed-files.txt`、`verification.md`、`patch.diff`。
 - Owner 审查与正式集成清单。
+- GitHub 仓库交付策略，区分本地提交、远端推送、draft PR、合并和 tag 的节奏。
 - 记忆桥协议与当前状态模板。
 - PowerShell 环境检查脚本。
 - 针对额度、限流或会话中断的断点记录与恢复规则。

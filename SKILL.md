@@ -108,9 +108,23 @@ If a project already has a bridge protocol, read it before acting. Otherwise cre
 5. **Give copyable instructions**: paste a concise command-style prompt in the chat for the user to give the implementer. Do not create a separate copy-to-implementer file unless requested.
 6. **Review delivery**: require `summary.md`, `changed-files.txt`, `verification.md`, and `patch.diff`; inspect the patch and compare it with the task. Use `references/review-checklist.md`.
 7. **Choose owner action**: apply small safe corrections directly; send large rewrites or wrong architecture back as a rework report.
-8. **Integrate formally**: apply reviewed changes to `<formal_repo>`, run fresh verification, scan for secrets, commit, push, and open/update a draft PR when appropriate.
-9. **Update state**: record task status, formal branch, commit, PR, verification results, risks, and next task in `<state_file>`.
-10. **Refresh safe copy**: after important formal integration, refresh `<safe_copy>` from the new formal baseline to avoid stale patch conflicts.
+8. **Integrate formally**: apply reviewed changes to `<formal_repo>`, run fresh verification, scan for secrets, and make reviewed local commits when appropriate.
+9. **Deliver to GitHub by cadence**: decide whether to push/open PR now based on the project's development docs, roadmap, stage boundaries, risk level, and `references/github-delivery-policy.md`.
+10. **Update state**: record task status, stage status, formal branch, local commit, push/PR decision, verification results, risks, and next task in `<state_file>`.
+11. **Refresh safe copy**: after important formal integration, refresh `<safe_copy>` from the new formal baseline to avoid stale patch conflicts.
+
+## Repository Delivery Cadence
+
+Do not push every small update by default. Use a layered cadence:
+
+- Local commit after reviewed task-level integration.
+- Remote push after a coherent feature slice, risk checkpoint, cross-machine handoff need, or stage closure.
+- Draft PR after a stage closes against its documented Definition of Done.
+- Merge/tag only after milestone, release, or user-approved closure.
+
+Project development documents, roadmap, and stage task plans define the normal push/PR frequency. If those documents are missing, create or update them before deciding the delivery cadence.
+
+Push early only for explicit exceptions: security fixes, high-risk persistence/schema/permission changes, machine migration, collaboration handoff, CI-only verification needs, or interruption risk.
 
 ## Review Policy
 
@@ -137,6 +151,7 @@ Record exact commands and results in the state file.
 ## Reference Files
 
 - Read `references/environment-bootstrap.md` before first use on a new machine or when paths/tools are unknown.
+- Read `references/github-delivery-policy.md` before creating a repository, pushing project work, opening PRs, tagging, or deciding delivery cadence.
 - Read `references/task-template.md` when creating a new implementer task.
 - Read `references/review-checklist.md` when reviewing a delivery packet or integrating code.
 - Read `references/state-template.md` when setting up this workflow in a new project.

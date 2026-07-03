@@ -66,8 +66,10 @@ Use project-specific equivalents when these commands do not exist. Do not report
 ## 6. GitHub Delivery
 
 - Commit only reviewed formal repo changes.
-- Push the branch.
-- Create or update a draft PR.
+- Decide delivery cadence using the project roadmap/stage plan and `references/github-delivery-policy.md`.
+- Keep reviewed task-level changes as local commits when the stage is not closed and no risk checkpoint requires remote backup.
+- Push the branch only at a coherent feature slice, risk checkpoint, cross-machine handoff point, CI need, or stage closure.
+- Create or update a draft PR when a stage/coherent delivery slice is ready for review.
 - Include Summary, Files changed, How to run, Tests added, Test results, Known limitations, and Next recommended task.
 - Inspect GitHub Actions status when available.
 - Request PR-level review only for high-risk changes.
@@ -89,6 +91,7 @@ Record:
 - task ID and status
 - current owner/responsible party
 - formal branch and commit
+- delivery cadence decision and reason
 - PR URL and CI result
 - verification commands and results
 - safety copy baseline
@@ -97,4 +100,3 @@ Record:
 ## 8. Safe Copy Refresh
 
 Refresh `<safe_copy>` from the formal baseline after meaningful integration, especially before giving another code task. This prevents stacked stale patches and lowers review cost.
-

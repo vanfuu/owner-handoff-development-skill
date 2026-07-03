@@ -218,6 +218,21 @@ Verification:
 - command: result
 ```
 
+Repository delivery cadence:
+
+```text
+local-only | pushed | draft-pr | merged | tagged
+reason: <why this cadence was chosen based on roadmap/stage/risk>
+```
+
+Stage boundary:
+
+```text
+stage: <stage id or none>
+definition_of_done: <met | not met | not defined>
+push_trigger: <stage closure | risk checkpoint | handoff | CI need | user request | none>
+```
+
 Next action:
 
 ```text
