@@ -7,6 +7,8 @@
 
 # Owner Handoff Development Skill
 
+![Owner Handoff Development architecture, workflows, gates, and durable-state overview](docs/owner-handoff-architecture.png)
+
 A Codex skill for running delegated software development and independent evidence-first audits with a clear engineering owner, an isolated implementation copy when needed, snapshot-bound findings, fresh verification, release gates, and controlled handoff.
 
 This skill is useful when you want Codex to act as the final engineering owner while another coding agent implements changes in a safety copy, or when Codex must audit a fixed repository/candidate snapshot without modifying it. It keeps architecture decisions, evidence, review, testing, release gates, handoff, and repository publishing in controlled lanes.
@@ -14,7 +16,7 @@ This skill is useful when you want Codex to act as the final engineering owner w
 ## What It Provides
 
 - New-machine bootstrap guidance for detecting tools and confirming paths.
-- Default Windows path layout for a formal repository, project-level handoff container, safety copy, and handoff area.
+- Cross-platform path-confirmation gates for the formal repository, handoff container, safety copy, outputs, and tool installations.
 - Task-file template for delegated coding work.
 - Copyable implementer instructions.
 - Delivery packet requirements: `summary.md`, `changed-files.txt`, `verification.md`, and `patch.diff`.
@@ -25,32 +27,18 @@ This skill is useful when you want Codex to act as the final engineering owner w
 - PowerShell environment inspection script.
 - Interruption and resume policy for quota, rate-limit, or session cutoffs.
 
-## Default Layout
+## Path Confirmation Gate
 
-After the user confirms the drive and project name, the skill proposes:
+The skill has no default drive, mount point, repository root, tools directory, or folder naming convention. It must not turn values from memory, prior projects, the current computer, examples, or another user into universal defaults.
 
-```text
-Formal repository:
-<drive>\codex\<project_name>
-
-Owner handoff container:
-<drive>\Claude code\<project_name>_OwnerHandoff
-
-Safety copy:
-<drive>\Claude code\<project_name>_OwnerHandoff\<project_name>_Safety copy
-
-Handoff root:
-<drive>\Claude code\<project_name>_OwnerHandoff\<project_name>_codex_handoff
-```
-
-Paths are proposals, not silent defaults. The skill instructs Codex to confirm the drive and directories with the user before creating, cloning, copying, deleting, or writing project files.
+Before creating, cloning, copying, deleting, installing, or writing, Codex must display every affected absolute path and obtain the user's confirmation for the stated operation. A discovered config is candidate input only. Path confirmation and install-plan confirmation are separate gates.
 
 ## Install
 
-Clone this repository into your Codex skills directory with the skill folder name:
+After confirming the actual Codex skills directory for this installation, clone the repository with the skill folder name:
 
 ```powershell
-git clone https://github.com/vanfuu/owner-handoff-development-skill.git "$env:USERPROFILE\.codex\skills\owner-handoff-development"
+git clone https://github.com/vanfuu/owner-handoff-development-skill.git "<confirmed_codex_skills_dir>\owner-handoff-development"
 ```
 
 Restart or refresh Codex so the skill metadata is rediscovered.
@@ -79,15 +67,27 @@ If you have the Codex skill validation helper available, run:
 python path\to\quick_validate.py path\to\owner-handoff-development
 ```
 
-The included PowerShell environment inspector can be run directly:
+The included PowerShell environment inspector can perform safe read-only detection without assuming paths:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environment.ps1 -ProjectName "Demo Project" -DefaultDrive "<drive>" -Json
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environment.ps1 -ProjectName "Demo Project" -Json
 ```
 
-Use `-InstallMissing` only after the user has authorized automatic setup of non-secret developer tools.
+Candidate paths can be loaded from a config, then explicitly confirmed for the current operation:
 
-The skill requires explicit confirmation before installing tools or writing project folders. Reusable external developer tools should target a user-confirmed tools directory outside system/default locations; project-specific tools should stay inside the project. Formal repository, safety copy, handoff, and report paths must be confirmed before filesystem changes.
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environment.ps1 -ConfigPath "<absolute_config_path>" -ConfirmedPaths -Json
+```
+
+`-InstallMissing` generates a plan unless the user has separately confirmed that exact plan and `-ConfirmedInstallPlan` is also supplied.
+
+Run the executable path-gate regression tests with:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\path-confirmation-gates.tests.ps1
+```
+
+Reusable external tools, project-specific tools, repositories, safety copies, handoff areas, and report outputs must all target user-confirmed absolute paths. No drive is treated as inherently preferred or forbidden.
 
 ## License
 
@@ -111,7 +111,7 @@ MIT. This license is intentionally permissive for a workflow/tooling skill: peop
 ## 它提供什么
 
 - 新电脑环境启动流程：检测工具、读取配置、确认路径。
-- 默认 Windows 目录布局：正式仓库、项目级协作容器、安全副本、交接区。
+- 跨平台路径确认门禁：覆盖正式仓库、协作容器、安全副本、输出目录和工具安装。
 - 委托式代码任务单模板。
 - 可直接复制给实现 Agent 的任务指令。
 - 交付包要求：`summary.md`、`changed-files.txt`、`verification.md`、`patch.diff`。
@@ -122,32 +122,18 @@ MIT. This license is intentionally permissive for a workflow/tooling skill: peop
 - PowerShell 环境检查脚本。
 - 针对额度、限流或会话中断的断点记录与恢复规则。
 
-## 默认目录结构
+## 路径确认门禁
 
-在使用者确认盘符和项目名称后，Skill 会建议：
+Skill 不预设默认盘符、挂载点、仓库根目录、工具目录或文件夹命名方式。来自记忆、历史项目、当前电脑、示例或其他使用者的路径习惯，都不能被提升为通用默认值。
 
-```text
-正式项目：
-<drive>\codex\<project_name>
-
-Owner 协作容器：
-<drive>\Claude code\<project_name>_OwnerHandoff
-
-安全副本：
-<drive>\Claude code\<project_name>_OwnerHandoff\<project_name>_Safety copy
-
-交接区：
-<drive>\Claude code\<project_name>_OwnerHandoff\<project_name>_codex_handoff
-```
-
-这些路径只是建议，不会被静默采用。Skill 会要求 Codex 在创建、克隆、复制、删除或写入项目文件之前，先让使用者确认盘符和目录。
+在创建、克隆、复制、删除、安装或写入之前，Codex 必须展示所有受影响的绝对路径，并取得使用者对本次操作范围的明确确认。自动发现的配置文件只提供候选值。路径确认与安装方案确认是两道独立门禁。
 
 ## 安装
 
-将仓库克隆到 Codex skills 目录，并保持 skill 文件夹名为 `owner-handoff-development`：
+先确认本次安装实际使用的 Codex skills 目录，再克隆仓库，并保持 skill 文件夹名为 `owner-handoff-development`：
 
 ```powershell
-git clone https://github.com/vanfuu/owner-handoff-development-skill.git "$env:USERPROFILE\.codex\skills\owner-handoff-development"
+git clone https://github.com/vanfuu/owner-handoff-development-skill.git "<confirmed_codex_skills_dir>\owner-handoff-development"
 ```
 
 然后重启或刷新 Codex，让它重新发现 Skill metadata。
@@ -176,15 +162,27 @@ Use $owner-handoff-development to audit this fixed snapshot without source chang
 python path\to\quick_validate.py path\to\owner-handoff-development
 ```
 
-也可以直接运行内置的 PowerShell 环境检查脚本：
+也可以在不假设任何路径的情况下运行内置 PowerShell 环境检查脚本：
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environment.ps1 -ProjectName "Demo Project" -DefaultDrive "<drive>" -Json
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environment.ps1 -ProjectName "Demo Project" -Json
 ```
 
-只有在使用者明确授权自动安装非敏感开发工具后，才使用 `-InstallMissing`。
+从配置读取候选路径后，只有在使用者确认本次操作所涉及的精确路径时，才能传入：
 
-安装工具或写入项目目录之前必须先得到明确确认。可复用的外部开发工具应安装到使用者确认过的工具目录，避免默认系统目录；项目专用工具应放在项目内部。正式仓库、安全副本、交接区和报告目录都必须确认后再继续。
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environment.ps1 -ConfigPath "<absolute_config_path>" -ConfirmedPaths -Json
+```
+
+仅使用 `-InstallMissing` 只会生成安装方案；使用者还必须单独确认该方案，并同时传入 `-ConfirmedInstallPlan`，脚本才允许执行安装。
+
+可执行的路径门禁回归测试：
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\tests\path-confirmation-gates.tests.ps1
+```
+
+可复用工具、项目专用工具、正式仓库、安全副本、交接区和报告目录都必须使用使用者确认过的绝对路径。Skill 不把任何盘符视为天然优先或天然禁止。
 
 ## 许可证
 

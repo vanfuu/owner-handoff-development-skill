@@ -62,19 +62,9 @@ Stage reports:
 
 ## Environment Bootstrap
 
-On a new machine, read config first, detect required tools, and confirm paths before creating or writing folders.
+On a new machine, read config first, detect required tools, and confirm every affected absolute path before creating or writing folders. A config, remembered drive, prior project layout, current working directory, or example is candidate information only and never authorizes filesystem changes.
 
-Default Windows path proposal after the user confirms `<drive>`:
-
-```text
-Formal repository: <drive>\codex\<project_name>
-Owner handoff:     <drive>\Claude code\<project_name>_OwnerHandoff
-Safety copy:       <drive>\Claude code\<project_name>_OwnerHandoff\<project_name>_Safety copy
-Handoff root:      <drive>\Claude code\<project_name>_OwnerHandoff\<project_name>_codex_handoff
-Reports:           <drive>\codex\<project_name>\reports\stage-reports
-```
-
-Record the config source, confirmed drive, confirmed paths, tool detection result, and any installation actions in `CURRENT_STATE.md`.
+Record the config source, exact confirmed paths, confirmation scope, tool detection result, and any separately confirmed installation actions in `CURRENT_STATE.md`.
 
 ## Roles
 
@@ -162,11 +152,17 @@ Read:
 ## Environment Snapshot
 
 - Config source: `<path or none>`
-- Default drive confirmed by user: `<drive>`
+- Path confirmation: `<pending | confirmed>`
+- Confirmation scope: `<exact operations covered>`
+- Confirmed at: `<timestamp or unknown>`
+- Formal repo confirmed by user: `<formal_repo>`
 - Dev tools root confirmed by user: `<dev_tools_root>`
 - Owner handoff root confirmed by user: `<owner_handoff_root>`
+- Safety copy confirmed by user: `<safe_copy>`
+- Handoff root confirmed by user: `<handoff_root>`
+- Reports path confirmed by user: `<reports_dir or not applicable>`
 - Tool status: `<summary>`
-- Install plan: `<none or summary>`
+- Install plan: `<none | pending confirmation | separately confirmed | summary>`
 - System/default-location writes: `<none or documented unavoidable writes>`
 - Cache/global directory redirects: `<none or summary>`
 - Setup actions: `<none or commands>`

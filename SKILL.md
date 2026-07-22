@@ -19,17 +19,25 @@ On an unfamiliar computer, bootstrap before creating tasks or editing code:
 
 1. Read any existing project config or bridge state. Prefer, in order: a user-provided config path, `<cwd>/owner-handoff.config.json`, `<cwd>/.owner-handoff/config.json`, then the user's home-level config.
 2. Detect OS, shell, Git, GitHub CLI, Python, ripgrep, and other project-required tools. Use `scripts/inspect_environment.ps1` on Windows/PowerShell when available.
-3. If required tools are missing, classify each install before acting: system-required tool, general development tool, project-specific tool, or temporary tool.
-4. Do not install external development tools into system/default locations by default. Ask the user to confirm a reusable `dev_tools_root`; put project-only tools inside the project; and list unavoidable system, home-directory, registry, or package-manager writes before proceeding.
+3. If required tools are missing, classify each install before acting: system-required tool, reusable development tool, project-specific tool, or temporary tool.
+4. Do not choose an install location from the current machine, memory, an example, or a previous user's convention. Ask the user to confirm an absolute `dev_tools_root`; put project-only tools inside a confirmed project path; and list unavoidable system, home-directory, registry, or package-manager writes before proceeding.
 5. Generate an install plan with purpose, target directory, scope, expected system/default-location writes, cache/global-directory settings, and whether user confirmation is required. Do not install until the user confirms the plan.
-6. Ask the user to confirm the default drive and the resolved formal/safety directories before creating, cloning, deleting, copying, or writing project files.
+6. Show the resolved absolute formal/safety/output directories and ask the user to confirm them before creating, cloning, deleting, copying, or writing project files.
 7. Only after path and install-plan confirmation, create missing folders, clone/copy repositories, create the bridge protocol, and continue with the Owner workflow.
 
-Do not guess drives, volumes, project roots, or handoff paths silently. If no project config has explicit paths, ask the user to confirm them before creating, copying, cloning, deleting, or writing.
+Do not guess drives, volumes, project roots, or handoff paths silently. A config file supplies candidate values, not permission to use them. If exact paths have not been confirmed in the current request, ask the user before creating, copying, cloning, deleting, installing, or writing.
 
 ## Required Confirmation Gates
 
-Before installing, configuring, initializing, cloning, copying, or writing project files, ask for confirmation when the value is not already explicitly approved in project config or the current user request.
+Before installing, configuring, initializing, cloning, copying, or writing project files, require current user confirmation of every affected absolute path. Confirmation remains valid only for the displayed paths and stated operation scope; ask again if a path, machine, workspace, or scope changes.
+
+Apply these general rules:
+
+- Never promote a drive letter, mount point, folder name, home-directory layout, tool root, repository layout, or cache location from memory, prior sessions, the current machine, examples, templates, or another user into a universal default.
+- Memory and detected filesystem state may help formulate a question, but they never authorize a target path.
+- Do not silently fall back to the current drive, current directory, home directory, system drive, default package-manager location, or an adjacent repository.
+- Require explicit absolute paths. Relative paths, unresolved variables, placeholders, and inferred roots keep the gate closed.
+- Present the exact resolved paths together in one concise confirmation prompt. Proceed only after an affirmative reply that clearly applies to those paths.
 
 Confirm these paths first:
 
@@ -51,7 +59,7 @@ For every install, present a plan before acting:
 - exact command to run
 - whether user confirmation has already been received
 
-If confirmation is missing, stop and ask. Do not treat inferred defaults as approval.
+Path confirmation and install confirmation are separate gates. A user may approve where files will go without approving an installer command, and vice versa. If either required confirmation is missing, stop before the state-changing action. Do not treat config discovery, prior habits, saved memory, or inferred defaults as approval.
 
 ## Interruption And Resume Policy
 
@@ -91,13 +99,7 @@ Establish these paths before generating tasks:
 - `<state_file>`: current state ledger for task status, branches, commits, PRs, verification, and next action.
 - `<reports_dir>`: optional user-facing stage reports.
 
-Default Windows layout after drive confirmation:
-
-- `<formal_repo>`: `<drive>\codex\<project_name>`
-- `<owner_handoff_root>`: `<drive>\Claude code\<project_name>_OwnerHandoff`
-- `<safe_copy>`: `<owner_handoff_root>\<project_name>_Safety copy`
-- `<handoff_root>`: `<owner_handoff_root>\<project_name>_codex_handoff`
-- `<reports_dir>`: `<formal_repo>\reports\stage-reports`
+These are semantic roles, not a required directory layout. Ask the user for exact absolute paths or present a clearly labeled candidate plan derived only from information the user supplied in the current request. Do not embed personal drive or folder conventions in that proposal.
 
 If a project already has a bridge protocol, read it before acting. Otherwise create a lightweight project-specific protocol using `references/state-template.md`.
 

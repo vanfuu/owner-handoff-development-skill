@@ -1,6 +1,21 @@
 # Environment Bootstrap
 
-Use this reference before using the Owner handoff workflow on a new computer, after changing machines, or when project paths/tools are uncertain.
+Use this reference before using the Owner handoff workflow on a new computer, after changing machines, or when project paths or tools are uncertain.
+
+## Universal Path Rule
+
+Treat every filesystem location as user-specific until confirmed. Never convert a drive letter, mount point, home-directory layout, folder name, tool root, repository layout, cache path, or naming convention from memory, previous sessions, the current machine, an example, or another user into a default.
+
+Read-only discovery may identify existing directories and help formulate a question. Discovery does not authorize creation, cloning, copying, deletion, installation, or writing.
+
+The path gate opens only when all of the following are true:
+
+1. Every affected target is an explicit absolute path.
+2. Placeholders, relative paths, unresolved environment variables, and inferred roots have been eliminated.
+3. The user has seen the resolved paths and confirmed them for the stated operation scope.
+4. The machine, workspace, paths, and operation scope still match what was confirmed.
+
+If any item changes, ask again. Path confirmation does not authorize an installation command; installation has a separate gate.
 
 ## Config Discovery
 
@@ -11,64 +26,50 @@ Read configuration in this order:
 3. `<cwd>/.owner-handoff/config.json`
 4. `%USERPROFILE%/.codex/owner-handoff-development/config.json` on Windows, or the equivalent home path on other systems.
 
-If no config exists, infer a proposal and ask the user to confirm it before creating or writing folders.
+A discovered config supplies candidate values only. It is never proof that the current user approved those paths for the current machine or operation.
 
 ## Suggested Config Shape
 
 ```json
 {
   "project_name": "My Project",
-  "default_drive": "<drive>",
-  "dev_tools_root": "<dev_tools_root>",
-  "formal_repo": "<formal_repo>",
-  "owner_handoff_root": "<owner_handoff_root>",
-  "safe_copy": "<safe_copy>",
-  "handoff_root": "<handoff_root>",
-  "reports_dir": "<reports_dir>",
+  "dev_tools_root": "<absolute_dev_tools_root>",
+  "formal_repo": "<absolute_formal_repo>",
+  "owner_handoff_root": "<absolute_owner_handoff_root>",
+  "safe_copy": "<absolute_safe_copy>",
+  "handoff_root": "<absolute_handoff_root>",
+  "reports_dir": "<absolute_reports_dir>",
   "install_policy": "plan_then_confirm"
 }
 ```
 
-Treat config as convenience, not as final authority. Confirm paths with the user unless the current request explicitly says the saved config is already approved. If `dev_tools_root` is missing, ask the user to provide a directory outside system/default install locations before installing reusable external development tools.
-
-## Default Path Proposal
-
-Ask the user to confirm the default drive. After confirmation, propose:
-
-```text
-Formal repository: <drive>\codex\<project_name>
-Owner handoff:     <drive>\Claude code\<project_name>_OwnerHandoff
-Safety copy:       <drive>\Claude code\<project_name>_OwnerHandoff\<project_name>_Safety copy
-Handoff root:      <drive>\Claude code\<project_name>_OwnerHandoff\<project_name>_codex_handoff
-Reports:           <drive>\codex\<project_name>\reports\stage-reports
-```
-
-Use the user's actual project name. Quote paths in shell commands when they contain spaces.
-
-Do not silently use `C:`, the current working drive, the current volume, the home directory, or another default root when the user has not confirmed the project paths.
+Do not add a default drive or default mount to the config template. Do not derive missing values by appending personal folder names to a root. Ask the user for the missing absolute paths.
 
 ## Required Path Confirmation Prompt
 
-Use a direct prompt before creating, cloning, copying, deleting, or writing project files:
+Before a filesystem-changing action, show only paths relevant to that action. A complete Owner-handoff bootstrap normally uses:
 
 ```text
 I need confirmation before changing the filesystem.
 
-Reusable tools root: <dev_tools_root>
-Formal repository: <formal_repo>
-Owner handoff root: <owner_handoff_root>
-Safety copy: <safe_copy>
-Handoff root: <handoff_root>
-Reports/output path: <reports_dir>
+Operation scope: <create | clone | copy | write | delete | install | other>
+Reusable tools root: <absolute_dev_tools_root or not applicable>
+Formal repository: <absolute_formal_repo>
+Owner handoff root: <absolute_owner_handoff_root>
+Safety copy: <absolute_safe_copy>
+Handoff root: <absolute_handoff_root>
+Reports/output path: <absolute_reports_dir or not applicable>
 
-Please confirm these paths, or provide corrected paths.
+Please confirm these exact paths for the stated operation, or provide corrected absolute paths.
 ```
 
-For Windows users, include the drive letter. For macOS/Linux users, include the mounted volume or absolute root path. Do not continue until the paths are confirmed.
+For Windows, show complete absolute paths including drive letters or UNC roots. For macOS/Linux, show complete absolute paths including mounted volumes when applicable. Do not continue until the user confirms the displayed values.
+
+The user's earlier personal preference may be mentioned as a candidate only when it is relevant and clearly labeled as unconfirmed. Never imply that it is a standard layout.
 
 ## Environment Detection
 
-Detect:
+Detect read-only facts before asking the path question when useful:
 
 - OS and architecture.
 - Current shell and PowerShell availability on Windows.
@@ -79,104 +80,118 @@ Detect:
 - Project-specific runtime tools, for example Node.js, pnpm, uv, Docker, or language SDKs.
 - Git authentication status when GitHub delivery is required.
 
-On Windows/PowerShell, run:
+On Windows/PowerShell, safe read-only inspection can run without path inputs:
 
 ```powershell
-& "<skill_dir>\scripts\inspect_environment.ps1" -ProjectName "<project_name>" -DefaultDrive "<drive>" -Json
+& "<skill_dir>\scripts\inspect_environment.ps1" -ProjectName "<project_name>" -Json
 ```
 
-If setup automation is authorized and non-secret tools are missing, first generate a plan:
+To inspect candidate paths from a config without authorizing writes:
 
 ```powershell
-& "<skill_dir>\scripts\inspect_environment.ps1" -ProjectName "<project_name>" -DefaultDrive "<drive>" -InstallMissing -Json
+& "<skill_dir>\scripts\inspect_environment.ps1" -ConfigPath "<absolute_config_path>" -Json
 ```
 
-Do not use `-InstallMissing` for secrets, credentials, private keys, API tokens, production data, browser logins, or destructive actions. Treat `-InstallMissing` as plan generation unless a user-confirmed `dev_tools_root` and explicit install confirmation are present.
+After the user confirms every displayed absolute path, record the confirmation for this run:
+
+```powershell
+& "<skill_dir>\scripts\inspect_environment.ps1" -ConfigPath "<absolute_config_path>" -ConfirmedPaths -Json
+```
+
+If non-secret tools are missing, generate an install plan without executing it:
+
+```powershell
+& "<skill_dir>\scripts\inspect_environment.ps1" -ConfigPath "<absolute_config_path>" -ConfirmedPaths -InstallMissing -Json
+```
+
+Only after the user separately confirms the exact install plan may it execute:
+
+```powershell
+& "<skill_dir>\scripts\inspect_environment.ps1" -ConfigPath "<absolute_config_path>" -ConfirmedPaths -InstallMissing -ConfirmedInstallPlan -Json
+```
+
+Do not use installation automation for secrets, credentials, private keys, API tokens, production data, browser logins, or destructive actions.
 
 ## Install Location Policy
 
 When tools are missing:
 
 1. Classify the install scope before installing:
-   - **System-required tool**: may install to a system/default location only when it is an OS component, driver, platform SDK, system runtime, system package manager, or a tool that truly cannot be redirected. Explain why.
-   - **General development tool**: install to the user-confirmed `dev_tools_root`, not a silent system/default location.
-   - **Project-specific tool**: install inside the project, for example `.tools`, `.bin`, `.vendor`, `.deps`, `tools`, `vendor`, `.venv`, `node_modules`, or the ecosystem's standard project-local directory.
-   - **Temporary tool**: install or unpack in a temporary working directory and clean it when appropriate.
-2. Do not default external tools to system/default locations such as:
-   - Windows: `C:\Program Files`, `C:\Program Files (x86)`, `%APPDATA%`, `%LOCALAPPDATA%`, `%USERPROFILE%\.xxx`, or another unconfirmed `C:` location.
-   - macOS: `/Applications`, `/usr/local`, `/opt/homebrew`, `$HOME/Library`, `$HOME/.xxx`, or unconfirmed Homebrew/global locations.
-   - Linux: `/usr`, `/usr/local`, `/opt`, `$HOME/.local`, `$HOME/.cache`, `$HOME/.xxx`, or unconfirmed package-manager/global locations.
-3. Before installation, present a plan that states:
-   - what will be installed
-   - purpose
-   - install directory
-   - whether it writes to a system/default location
-   - why any system/default write is unavoidable
-   - whether cache/global directories can be moved to the confirmed tool root or project
-   - whether the install is project-level or reusable/global
-4. Configure caches and global directories away from system/default locations when the tool supports it, including npm, pnpm, pip, uv, conda, cargo, Gradle, Maven, Go, Docker, and model caches.
-5. Prefer project-local installs, virtual environments, portable archives, or project `.tools`/`.vendor` directories over global installs.
-6. Only after the user confirms the plan, install non-secret developer tools. On Windows, `winget` package IDs may be used with a target location when supported:
-   - `Git.Git`
-   - `GitHub.cli`
-   - `Python.Python.3.12`
-   - `BurntSushi.ripgrep.MSVC`
-   - `Microsoft.PowerShell`
-7. If the installer ignores custom locations, requires admin UI, writes unavoidable state to a system/default location, or fails, stop and provide the exact command and risk summary for the user to approve.
-8. After installation, re-run environment detection and record the result in the state file.
+   - **System-required tool**: may need a system-managed location because it is an OS component, driver, platform SDK, system runtime, system package manager, or another non-relocatable dependency. Explain why.
+   - **Reusable development tool**: ask the user to choose and confirm an absolute `dev_tools_root`.
+   - **Project-specific tool**: use an ecosystem-standard project-local directory only after the project path is confirmed.
+   - **Temporary tool**: show the temporary directory and cleanup behavior before use when it will change the filesystem.
+2. Do not assume that a particular drive is good or bad. Evaluate the exact target, permissions, free space, portability, backup behavior, installer constraints, and user preference.
+3. Treat system-managed or home-managed locations as review points, not automatic choices. Examples include:
+   - Windows: Program Files, AppData, the user profile, registry, Start Menu, and package-manager state.
+   - macOS: `/Applications`, system or Homebrew prefixes, `$HOME/Library`, home-level config, and package-manager state.
+   - Linux: `/usr`, `/usr/local`, `/opt`, home-level local/cache/config directories, and package-manager state.
+4. Before installation, present:
+   - tool and purpose
+   - install scope
+   - exact target directory
+   - exact command
+   - expected system-managed or home-managed writes
+   - why unavoidable writes cannot be redirected
+   - cache/global-directory choices
+   - whether administrator privileges or UI interaction are expected
+5. Prefer project-local installs, virtual environments, portable archives, or project `.tools`/`.vendor` directories when they fit the tool and the user has confirmed the project path.
+6. Configure caches and global directories only to user-confirmed paths. Do not relocate them to a remembered personal tools drive.
+7. On Windows, `winget` package IDs may be included in a proposed plan when supported, but `--location` is not proof that every write will stay there. Verify actual behavior after installation.
+8. If an installer ignores custom locations, requires admin UI, adds unapproved writes, or fails, stop and show the observed result before retrying.
+9. After installation, re-run environment detection and record the result in the state file.
 
 ## Required Install Plan Prompt
 
 Use a direct prompt before running install commands:
 
 ```text
-I need confirmation before installing tools.
+I need separate confirmation before installing tools.
 
 Tool: <tool>
 Purpose: <purpose>
 Scope: <system-required | reusable development tool | project-specific | temporary>
-Target directory: <path>
-System/default-location writes: <none | details>
-Cache/global directory redirects: <details>
+Target directory: <absolute_path>
+System/home-managed writes: <none | details>
+Cache/global directory choices: <details>
+Administrator or UI interaction: <none | details>
 Command: <exact command>
 
-Please confirm whether to proceed.
+The target paths have been confirmed separately. Please confirm whether to execute this exact install plan.
 ```
 
-If the install plan includes unavoidable writes to a system/default location, explain why they are unavoidable and whether they can be redirected. Do not proceed without user confirmation.
+Do not interpret path confirmation as install confirmation. Do not proceed without both gates.
 
-## Windows Path Confirmation Prompt Example
-
-Use a short confirmation prompt like:
+## 中文路径确认示例
 
 ```text
-我检测到/建议使用以下目录，请确认后我再创建或写入：
+在执行文件系统变更前，我需要你确认以下精确路径：
 
-默认盘符：<drive>
-通用开发工具目录：<confirmed-dev-tools-root>
-正式项目：<drive>\codex\<project_name>
-协作容器：<drive>\Claude code\<project_name>_OwnerHandoff
-安全副本：<drive>\Claude code\<project_name>_OwnerHandoff\<project_name>_Safety copy
-交接区：<drive>\Claude code\<project_name>_OwnerHandoff\<project_name>_codex_handoff
+操作范围：<创建 / 克隆 / 复制 / 写入 / 删除 / 安装 / 其他>
+通用开发工具目录：<绝对路径或不适用>
+正式项目：<绝对路径>
+协作容器：<绝对路径>
+安全副本：<绝对路径>
+交接区：<绝对路径>
+报告目录：<绝对路径或不适用>
 
-请确认这些路径是否正确，尤其是默认盘符。
+请确认这些路径仅用于上述操作；如果不正确，请提供修正后的绝对路径。
 ```
 
-Do not proceed with folder creation, copying, cloning, or deletion until the user confirms.
+Do not insert a habitual drive letter or folder naming convention into this template.
 
 ## State Recording
 
 After bootstrap, record in the project state file:
 
 - Config source used.
-- Confirmed `dev_tools_root`.
-- Confirmed formal repo path.
-- Confirmed owner handoff root.
-- Confirmed safety copy path.
-- Confirmed handoff root.
+- Exact paths displayed to the user.
+- Path confirmation status, scope, and time.
+- Confirmed `dev_tools_root`, when applicable.
+- Confirmed formal repo, owner handoff, safety copy, handoff, and report paths.
 - Tool detection result.
-- Install plan and user confirmation status, if missing tools were found.
+- Install plan and separate confirmation status, if missing tools were found.
 - Tool installation actions, if any.
-- Any unavoidable system/default-location writes and cache/global-directory redirects.
+- Any unavoidable system/home-managed writes and cache/global-directory decisions.
 - GitHub auth status if checked.
 - Remaining manual setup, if any.
