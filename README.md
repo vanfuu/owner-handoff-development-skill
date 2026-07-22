@@ -82,7 +82,7 @@ python path\to\quick_validate.py path\to\owner-handoff-development
 The included PowerShell environment inspector can be run directly:
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environment.ps1 -ProjectName "Demo Project" -DefaultDrive "F:" -Json
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environment.ps1 -ProjectName "Demo Project" -DefaultDrive "<drive>" -Json
 ```
 
 Use `-InstallMissing` only after the user has authorized automatic setup of non-secret developer tools.
@@ -179,7 +179,7 @@ python path\to\quick_validate.py path\to\owner-handoff-development
 也可以直接运行内置的 PowerShell 环境检查脚本：
 
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environment.ps1 -ProjectName "Demo Project" -DefaultDrive "F:" -Json
+powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\inspect_environment.ps1 -ProjectName "Demo Project" -DefaultDrive "<drive>" -Json
 ```
 
 只有在使用者明确授权自动安装非敏感开发工具后，才使用 `-InstallMissing`。
