@@ -82,13 +82,13 @@ Detect:
 On Windows/PowerShell, run:
 
 ```powershell
-& "<skill_dir>\scripts\inspect_environment.ps1" -ProjectName "<project_name>" -DefaultDrive "F:" -Json
+& "<skill_dir>\scripts\inspect_environment.ps1" -ProjectName "<project_name>" -DefaultDrive "<drive>" -Json
 ```
 
 If setup automation is authorized and non-secret tools are missing, first generate a plan:
 
 ```powershell
-& "<skill_dir>\scripts\inspect_environment.ps1" -ProjectName "<project_name>" -DefaultDrive "F:" -InstallMissing -Json
+& "<skill_dir>\scripts\inspect_environment.ps1" -ProjectName "<project_name>" -DefaultDrive "<drive>" -InstallMissing -Json
 ```
 
 Do not use `-InstallMissing` for secrets, credentials, private keys, API tokens, production data, browser logins, or destructive actions. Treat `-InstallMissing` as plan generation unless a user-confirmed `dev_tools_root` and explicit install confirmation are present.
