@@ -7,9 +7,9 @@
 
 # Owner Handoff Development Skill
 
-A Codex skill for running delegated software development with a clear engineering owner, an isolated implementation copy, patch-based delivery, independent review, fresh verification, and GitHub integration.
+A Codex skill for running delegated software development and independent evidence-first audits with a clear engineering owner, an isolated implementation copy when needed, snapshot-bound findings, fresh verification, release gates, and controlled handoff.
 
-This skill is useful when you want Codex to act as the final engineering owner while another coding agent, such as Claude or DeepSeek, implements changes in a safety copy. It helps keep architecture decisions, code review, testing, release notes, and repository publishing in one controlled lane.
+This skill is useful when you want Codex to act as the final engineering owner while another coding agent implements changes in a safety copy, or when Codex must audit a fixed repository/candidate snapshot without modifying it. It keeps architecture decisions, evidence, review, testing, release gates, handoff, and repository publishing in controlled lanes.
 
 ## What It Provides
 
@@ -19,6 +19,7 @@ This skill is useful when you want Codex to act as the final engineering owner w
 - Copyable implementer instructions.
 - Delivery packet requirements: `summary.md`, `changed-files.txt`, `verification.md`, and `patch.diff`.
 - Owner review and formal integration checklist.
+- Independent repository audit and candidate-acceptance workflow with snapshot proof, evidence ledgers, gate decisions, manifest closure, and copy-ready main-thread handoff.
 - GitHub repository delivery policy with local commit, remote push, draft PR, merge, and tag cadence.
 - Bridge protocol and current-state templates.
 - PowerShell environment inspection script.
@@ -62,6 +63,12 @@ Ask Codex:
 Use $owner-handoff-development to bootstrap the environment, confirm formal and safety paths, then run delegated development with Owner review, tests, and GitHub integration.
 ```
 
+Or for an audit:
+
+```text
+Use $owner-handoff-development to audit this fixed snapshot without source changes, close the evidence package, decide the release gate, and produce a copy-ready handoff.
+```
+
 For a new project, Codex should first read `references/environment-bootstrap.md`, run environment detection where appropriate, ask the user to confirm paths, then create the project bridge files.
 
 ## Validate
@@ -97,9 +104,9 @@ MIT. This license is intentionally permissive for a workflow/tooling skill: peop
 
 # Owner Handoff Development Skill（中文）
 
-这是一个面向 Codex 的开发流程 Skill，用于管理“主工程 Owner + 安全副本实现 + Patch 交付 + 独立审查 + 新鲜验证 + GitHub 集成”的委托式软件开发流程。
+这是一个面向 Codex 的工程 Owner Skill，用于管理“安全副本实现 + Patch 交付”的委托开发，也用于“固定快照 + 独立只读审计 + 证据闭环 + 发布门禁 + 主线程交接”。
 
-当你希望 Codex 负责最终工程判断，而让 Claude、DeepSeek 或其他代码 Agent 只在安全副本中实现具体改动时，这个 Skill 可以帮助你把架构决策、任务拆解、代码审查、测试验证、发布说明和仓库同步放进一条受控流程里。
+当你希望 Codex 负责最终工程判断，而让 Claude、DeepSeek 或其他代码 Agent 只在安全副本中实现具体改动，或者希望 Codex 在不修改源码的前提下审计固定仓库/候选包时，这个 Skill 可以把架构决策、证据、审查、测试、门禁、交接和仓库同步放进彼此边界清楚的受控流程里。
 
 ## 它提供什么
 
@@ -109,6 +116,7 @@ MIT. This license is intentionally permissive for a workflow/tooling skill: peop
 - 可直接复制给实现 Agent 的任务指令。
 - 交付包要求：`summary.md`、`changed-files.txt`、`verification.md`、`patch.diff`。
 - Owner 审查与正式集成清单。
+- 独立仓库审计和候选验收流程：快照证明、证据台账、门禁决策、manifest 闭环与可复制主线程交接。
 - GitHub 仓库交付策略，区分本地提交、远端推送、draft PR、合并和 tag 的节奏。
 - 记忆桥协议与当前状态模板。
 - PowerShell 环境检查脚本。
@@ -150,6 +158,12 @@ git clone https://github.com/vanfuu/owner-handoff-development-skill.git "$env:US
 
 ```text
 Use $owner-handoff-development to bootstrap the environment, confirm formal and safety paths, then run delegated development with Owner review, tests, and GitHub integration.
+```
+
+审计场景也可以这样说：
+
+```text
+Use $owner-handoff-development to audit this fixed snapshot without source changes, close the evidence package, decide the release gate, and produce a copy-ready handoff.
 ```
 
 对于新项目，Codex 应先读取 `references/environment-bootstrap.md`，在合适情况下运行环境检测，要求使用者确认路径，然后再创建项目交接文件。

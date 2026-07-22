@@ -18,13 +18,13 @@ If no config exists, infer a proposal and ask the user to confirm it before crea
 ```json
 {
   "project_name": "My Project",
-  "default_drive": "F:",
-  "dev_tools_root": "E:\\Software\\DevTools",
-  "formal_repo": "F:\\codex\\My Project",
-  "owner_handoff_root": "F:\\Claude code\\My Project_OwnerHandoff",
-  "safe_copy": "F:\\Claude code\\My Project_OwnerHandoff\\My Project_Safety copy",
-  "handoff_root": "F:\\Claude code\\My Project_OwnerHandoff\\My Project_codex_handoff",
-  "reports_dir": "F:\\codex\\My Project\\reports\\stage-reports",
+  "default_drive": "<drive>",
+  "dev_tools_root": "<dev_tools_root>",
+  "formal_repo": "<formal_repo>",
+  "owner_handoff_root": "<owner_handoff_root>",
+  "safe_copy": "<safe_copy>",
+  "handoff_root": "<handoff_root>",
+  "reports_dir": "<reports_dir>",
   "install_policy": "plan_then_confirm"
 }
 ```

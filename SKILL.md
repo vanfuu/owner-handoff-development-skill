@@ -1,6 +1,6 @@
 ---
 name: owner-handoff-development
-description: Manage delegated software development where Codex acts as the single engineering Owner, another coding agent such as Claude or DeepSeek implements in a safe copy, and Codex bootstraps the environment, confirms formal/safety paths, reviews patches, tests, integrates, commits, pushes, opens PRs, updates handoff state, and gives copyable implementer instructions. Use when the user asks for a reusable Owner handoff workflow, safe-copy development, new-machine setup, Claude handoff tasks, patch delivery review, staged GitHub integration, or multi-agent engineering execution.
+description: Manage delegated software development and independent evidence-first audits where Codex acts as the single engineering Owner. Covers safe-copy implementation handoffs, candidate-package acceptance, read-only snapshot audits, release-gate decisions, environment bootstrap, patch review, verification, integration, GitHub delivery, durable state, and copy-ready main-thread handoffs. Use when the user asks for an Owner handoff workflow, safe-copy development, new-machine setup, Claude handoff tasks, candidate or patch review, independent repository audit, audit-package closure, staged GitHub integration, or multi-agent engineering execution.
 ---
 
 # Owner Handoff Development
@@ -10,6 +10,8 @@ description: Manage delegated software development where Codex acts as the singl
 Use this skill to run an engineering workflow where Codex owns architecture, task breakdown, review, verification, integration, GitHub delivery, and project memory, while implementation agents only modify a controlled safety copy.
 
 The standard is complete delivery: read context first, make durable fixes, test before shipping, document state changes, and never treat an implementer's self-reported verification as final.
+
+For an independent audit, candidate acceptance review, or release-readiness decision, keep discovery separate from remediation. Do not modify project source merely because a defect is easy to fix. Read `references/independent-audit-handoff.md` before acting.
 
 ## New Machine Bootstrap
 
@@ -101,6 +103,11 @@ If a project already has a bridge protocol, read it before acting. Otherwise cre
 
 ## Workflow
 
+Choose exactly one primary lane before acting:
+
+- **Delegated implementation**: follow the workflow below when an implementer edits a safety copy and returns a patch.
+- **Independent audit or candidate acceptance**: follow `references/independent-audit-handoff.md`; preserve the declared no-write boundary, bind conclusions to an exact snapshot, and close the evidence package before recommending remediation.
+
 1. **Bootstrap environment**: read config, detect tools, generate any required install plan, confirm reusable tool directories and formal/safety paths, then act only after user confirmation. Use `references/environment-bootstrap.md`.
 2. **Rebuild context**: read the bridge protocol, current state, README, roadmap/spec files, and repo status for both formal repo and safe copy.
 3. **Decide the next task**: choose the smallest coherent unit that advances the project without leaving architecture debt.
@@ -154,4 +161,5 @@ Record exact commands and results in the state file.
 - Read `references/github-delivery-policy.md` before creating a repository, pushing project work, opening PRs, tagging, or deciding delivery cadence.
 - Read `references/task-template.md` when creating a new implementer task.
 - Read `references/review-checklist.md` when reviewing a delivery packet or integrating code.
+- Read `references/independent-audit-handoff.md` when conducting a read-only repository audit, candidate-only acceptance review, evidence-package closure, release/readiness gate, or copy-ready audit handoff.
 - Read `references/state-template.md` when setting up this workflow in a new project.
